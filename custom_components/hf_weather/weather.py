@@ -43,12 +43,12 @@ CONDITION_CLASSES = {
     'windy': ["有风", "微风", "和风", "清风"],
     'windy-variant': ["强风", "疾风", "大风", "烈风"],
     'hurricane': ["飓风", "龙卷风", "热带风暴", "狂暴风", "风暴"],
-    'rainy': ["毛毛雨", "小雨", "中雨", "大雨", "阵雨", "极端降雨"],
+    'rainy': ["雨", "毛毛雨", "小雨", "中雨", "大雨", "阵雨", "极端降雨"],
     'pouring': ["暴雨", "大暴雨", "特大暴雨", "强阵雨"],
     'lightning-rainy': ["雷阵雨", "强雷阵雨"],
     'fog': ["雾", "薄雾"],
     'hail': ["雷阵雨伴有冰雹"],
-    'snowy': ["小雪", "中雪", "大雪", "暴雪", "阵雪"],
+    'snowy': ["雪", "小雪", "中雪", "大雪", "暴雪", "阵雪"],
     'snowy-rainy': ["雨夹雪", "雨雪天气", "阵雨夹雪"],
 }
 TRANSLATE_SUGGESTION = {
@@ -165,10 +165,13 @@ class HeFengWeather(WeatherEntity):
     @property
     def condition(self):
         """Return the weather condition."""
-        if self._condition:
-            return [k for k, v in CONDITION_CLASSES.items() if self._condition in v][0]
-        else:
-            return 'unknown'
+        try:
+            # print(self._condition)
+            if self._condition:
+                return [k for k, v in CONDITION_CLASSES.items() if self._condition in v][0]            
+        except Exception as ex:
+            pass
+        return 'unknown'
 
     @property
     def attribution(self):
@@ -180,6 +183,7 @@ class HeFengWeather(WeatherEntity):
         """设置其它一些属性值."""
         if self._condition is not None:
             return {
+                "city": self._name,
                 ATTR_ATTRIBUTION: ATTRIBUTION,
                 ATTR_UPDATE_TIME: self._updatetime,
                 ATTR_CONDITION_CN: self._condition,

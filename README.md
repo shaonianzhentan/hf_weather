@@ -17,7 +17,12 @@ weather:
 ```yaml
 type: 'custom:hf_weather-card'
 entity: weather.tian_qi
-```
 
+# 不设置则同时显示
+mode: hourly按小时天气预报、daily按天天气预报
+
+# 不设置则使用entity的friendly_name
+title: 卡片标题
+```
 
 注意：请自行申请appkey: https://wx.jdcloud.com/market/datas/26/10610

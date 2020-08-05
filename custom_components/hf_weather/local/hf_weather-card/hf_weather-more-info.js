@@ -92,7 +92,7 @@ class MoreInfoWeather extends Polymer.Element {
   static get template() {
     return Polymer.html`
       <style>
-        iron-icon {
+        ha-icon {
           color: var(--paper-item-icon-color);
         }
         .section {
@@ -136,9 +136,17 @@ class MoreInfoWeather extends Polymer.Element {
           text-align: center;
         }
       </style>
-
       <div class="flex">
-        <iron-icon icon="hass:thermometer"></iron-icon>
+        <ha-icon icon="mdi:city"></ha-icon>
+        <div class="main">
+          城市
+        </div>
+        <div>
+          [[stateObj.attributes.city]]
+        </div>
+      </div>
+      <div class="flex">
+        <ha-icon icon="hass:thermometer"></ha-icon>
         <div class="main">
           温度
         </div>
@@ -148,7 +156,7 @@ class MoreInfoWeather extends Polymer.Element {
       </div>
       <template is="dom-if" if="[[_showValue(stateObj.attributes.pressure)]]">
         <div class="flex">
-          <iron-icon icon="hass:gauge"></iron-icon>
+          <ha-icon icon="hass:gauge"></ha-icon>
           <div class="main">
             气压
           </div>
@@ -159,7 +167,7 @@ class MoreInfoWeather extends Polymer.Element {
       </template>
       <template is="dom-if" if="[[_showValue(stateObj.attributes.humidity)]]">
         <div class="flex">
-          <iron-icon icon="hass:water-percent"></iron-icon>
+          <ha-icon icon="hass:water-percent"></ha-icon>
           <div class="main">
             湿度
           </div>
@@ -168,7 +176,7 @@ class MoreInfoWeather extends Polymer.Element {
       </template>
       <template is="dom-if" if="[[_showValue(stateObj.attributes.wind_speed)]]">
         <div class="flex">
-          <iron-icon icon="hass:weather-windy"></iron-icon>
+          <ha-icon icon="hass:weather-windy"></ha-icon>
           <div class="main">
             风速
           </div>
@@ -179,7 +187,7 @@ class MoreInfoWeather extends Polymer.Element {
       </template>
       <template is="dom-if" if="[[_showValue(stateObj.attributes.visibility)]]">
         <div class="flex">
-          <iron-icon icon="hass:eye"></iron-icon>
+          <ha-icon icon="hass:eye"></ha-icon>
           <div class="main">
             能见度
           </div>
@@ -202,7 +210,7 @@ class MoreInfoWeather extends Polymer.Element {
         <template is="dom-repeat" items="[[stateObj.attributes.forecast]]">
           <div class="flex">
             <template is="dom-if" if="[[_showValue(item.condition)]]">
-              <iron-icon icon="[[getWeatherIcon(item.condition)]]"></iron-icon>
+              <ha-icon icon="[[getWeatherIcon(item.condition)]]"></ha-icon>
             </template>
             <template is="dom-if" if="[[!_showValue(item.templow)]]">
               <div class="main">[[computeDateTime(item.datetime)]]</div>
