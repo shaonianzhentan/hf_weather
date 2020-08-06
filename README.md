@@ -26,8 +26,11 @@ mode: hourly按小时天气预报、daily按天天气预报
 title: 卡片标题
 ```
 
-> 提醒模板
+> TTS语音提醒模板
 ```yaml
-{% set state = state_attr("weather.tian_qi", "forecast")[1] %}
-今天的天气是{{state.condition_cn}}，最高温度{{state.temperature}}摄氏度，最低温度{{state.templow}}摄氏度
+data:
+  message: >-
+    {% set state = state_attr('weather.tian_qi', 'forecast')[0]%}
+    今天的天气是{{state.condition_cn}}，最高温度：{{state.temperature}}度，最低温度：{{state.templow}}度
+service: ha_cloud_music.tts
 ```
