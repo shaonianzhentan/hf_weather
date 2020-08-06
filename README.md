@@ -11,6 +11,7 @@ weather:
     city: shanghai
     appkey: 06642046425c68a351817b5b020b591f
 ```
+注意：请自行申请appkey: https://wx.jdcloud.com/market/datas/26/10610
 
 > Lovelace配置
 
@@ -25,4 +26,8 @@ mode: hourly按小时天气预报、daily按天天气预报
 title: 卡片标题
 ```
 
-注意：请自行申请appkey: https://wx.jdcloud.com/market/datas/26/10610
+> 提醒模板
+```yaml
+{% set state = state_attr("weather.tian_qi", "forecast")[1] %}
+今天的天气是{{state.condition_cn}}，最高温度{{state.temperature}}摄氏度，最低温度{{state.templow}}摄氏度
+```

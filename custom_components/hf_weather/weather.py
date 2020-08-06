@@ -209,7 +209,8 @@ class HeFengWeather(WeatherEntity):
                 ATTR_FORECAST_TEMP_LOW: entry[2],
                 ATTR_FORECAST_TIME: entry[3],
                 ATTR_FORECAST_PRECIPITATION: entry[4],
-                ATTR_FORECAST_PROBABLE_PRECIPITATION: entry[5]
+                ATTR_FORECAST_PROBABLE_PRECIPITATION: entry[5],
+                "condition_cn": entry[6]
             }
             reftime = reftime + timedelta(days=1)
             forecast_data.append(data_dict)
@@ -228,7 +229,8 @@ class HeFengWeather(WeatherEntity):
                 ATTR_FORECAST_CONDITION: entry[0],
                 ATTR_FORECAST_TEMP: entry[1],
                 ATTR_FORECAST_TIME: entry[2],
-                ATTR_FORECAST_PROBABLE_PRECIPITATION: entry[3]
+                ATTR_FORECAST_PROBABLE_PRECIPITATION: entry[3],
+                "condition_cn": entry[4]
             }
             forecast_data.append(data_dict)
         # _LOGGER.debug('hourly_forecast_data: %s', forecast_data)
@@ -410,15 +412,14 @@ class WeatherData(object):
                 if datemsg[n]["cond"]["txt_d"] in j:
                     forec_cond.append(i)
         self._daily_forecast = [
-            [forec_cond[0], int(datemsg[0]["tmp"]["max"]), int(datemsg[0]["tmp"]["min"]), datemsg[0]["date"], datemsg[0]["pcpn"], datemsg[0]["pop"]],
-            [forec_cond[1], int(datemsg[1]["tmp"]["max"]), int(datemsg[1]["tmp"]["min"]), datemsg[1]["date"], datemsg[1]["pcpn"], datemsg[1]["pop"]],
-            [forec_cond[2], int(datemsg[2]["tmp"]["max"]), int(datemsg[2]["tmp"]["min"]), datemsg[2]["date"], datemsg[2]["pcpn"], datemsg[2]["pop"]],
-            [forec_cond[3], int(datemsg[3]["tmp"]["max"]), int(datemsg[3]["tmp"]["min"]), datemsg[3]["date"], datemsg[3]["pcpn"], datemsg[3]["pop"]],
-            [forec_cond[4], int(datemsg[4]["tmp"]["max"]), int(datemsg[4]["tmp"]["min"]), datemsg[4]["date"], datemsg[4]["pcpn"], datemsg[4]["pop"]],
-            [forec_cond[5], int(datemsg[5]["tmp"]["max"]), int(datemsg[5]["tmp"]["min"]), datemsg[5]["date"], datemsg[5]["pcpn"], datemsg[5]["pop"]],
-            [forec_cond[6], int(datemsg[6]["tmp"]["max"]), int(datemsg[6]["tmp"]["min"]), datemsg[6]["date"], datemsg[6]["pcpn"], datemsg[6]["pop"]]
+            [forec_cond[0], int(datemsg[0]["tmp"]["max"]), int(datemsg[0]["tmp"]["min"]), datemsg[0]["date"], datemsg[0]["pcpn"], datemsg[0]["pop"], datemsg[0]["cond"]["txt_d"]],
+            [forec_cond[1], int(datemsg[1]["tmp"]["max"]), int(datemsg[1]["tmp"]["min"]), datemsg[1]["date"], datemsg[1]["pcpn"], datemsg[1]["pop"], datemsg[1]["cond"]["txt_d"]],
+            [forec_cond[2], int(datemsg[2]["tmp"]["max"]), int(datemsg[2]["tmp"]["min"]), datemsg[2]["date"], datemsg[2]["pcpn"], datemsg[2]["pop"], datemsg[2]["cond"]["txt_d"]],
+            [forec_cond[3], int(datemsg[3]["tmp"]["max"]), int(datemsg[3]["tmp"]["min"]), datemsg[3]["date"], datemsg[3]["pcpn"], datemsg[3]["pop"], datemsg[3]["cond"]["txt_d"]],
+            [forec_cond[4], int(datemsg[4]["tmp"]["max"]), int(datemsg[4]["tmp"]["min"]), datemsg[4]["date"], datemsg[4]["pcpn"], datemsg[4]["pop"], datemsg[4]["cond"]["txt_d"]],
+            [forec_cond[5], int(datemsg[5]["tmp"]["max"]), int(datemsg[5]["tmp"]["min"]), datemsg[5]["date"], datemsg[5]["pcpn"], datemsg[5]["pop"], datemsg[5]["cond"]["txt_d"]],
+            [forec_cond[6], int(datemsg[6]["tmp"]["max"]), int(datemsg[6]["tmp"]["min"]), datemsg[6]["date"], datemsg[6]["pcpn"], datemsg[6]["pop"], datemsg[6]["cond"]["txt_d"]]
             ]
-        
         datemsg = all_result["hourly_forecast"]
         forec_cond = []
         for n in range(7):
@@ -426,13 +427,13 @@ class WeatherData(object):
                 if datemsg[n]["cond"]["txt"] in j:
                     forec_cond.append(i)
         self._hourly_forecast = [
-            [forec_cond[0], int(datemsg[0]["tmp"]), datemsg[0]["date"], datemsg[0]["pop"]],
-            [forec_cond[1], int(datemsg[1]["tmp"]), datemsg[1]["date"], datemsg[1]["pop"]],
-            [forec_cond[2], int(datemsg[2]["tmp"]), datemsg[2]["date"], datemsg[2]["pop"]],
-            [forec_cond[3], int(datemsg[3]["tmp"]), datemsg[3]["date"], datemsg[3]["pop"]],
-            [forec_cond[4], int(datemsg[4]["tmp"]), datemsg[4]["date"], datemsg[4]["pop"]],
-            [forec_cond[5], int(datemsg[5]["tmp"]), datemsg[5]["date"], datemsg[5]["pop"]],
-            [forec_cond[6], int(datemsg[6]["tmp"]), datemsg[6]["date"], datemsg[6]["pop"]]
+            [forec_cond[0], int(datemsg[0]["tmp"]), datemsg[0]["date"], datemsg[0]["pop"], datemsg[0]["cond"]["txt"]],
+            [forec_cond[1], int(datemsg[1]["tmp"]), datemsg[1]["date"], datemsg[1]["pop"], datemsg[1]["cond"]["txt"]],
+            [forec_cond[2], int(datemsg[2]["tmp"]), datemsg[2]["date"], datemsg[2]["pop"], datemsg[2]["cond"]["txt"]],
+            [forec_cond[3], int(datemsg[3]["tmp"]), datemsg[3]["date"], datemsg[3]["pop"], datemsg[3]["cond"]["txt"]],
+            [forec_cond[4], int(datemsg[4]["tmp"]), datemsg[4]["date"], datemsg[4]["pop"], datemsg[4]["cond"]["txt"]],
+            [forec_cond[5], int(datemsg[5]["tmp"]), datemsg[5]["date"], datemsg[5]["pop"], datemsg[5]["cond"]["txt"]],
+            [forec_cond[6], int(datemsg[6]["tmp"]), datemsg[6]["date"], datemsg[6]["pop"], datemsg[6]["cond"]["txt"]]
             ]
 
         _LOGGER.info("success to fetch local informations from API")
