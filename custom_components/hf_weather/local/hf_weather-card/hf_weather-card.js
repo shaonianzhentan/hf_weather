@@ -711,4 +711,4 @@ setTimeout(function () {
 
   customElements.define('hf_weather-card', WeatherCardChart);
 
-}, 1000)
+}, 500)
