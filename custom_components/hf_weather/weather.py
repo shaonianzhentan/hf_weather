@@ -89,12 +89,13 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     async_add_devices([HeFengWeather(data, name)], True)
 
     # 注册静态目录
+    VERSION = '1.0'
     ROOT_PATH = '/hf_weather-local'
     local = hass.config.path('custom_components/hf_weather/local')
     if os.path.isdir(local):
         hass.http.register_static_path(ROOT_PATH, local, False)
-    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-card.js')
-    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-more-info.js')
+    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-card.js?ver=' + VERSION)
+    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-more-info.js?ver=' + VERSION)
 
 
 class HeFengWeather(WeatherEntity):
