@@ -345,20 +345,21 @@ setTimeout(function () {
     constructor() {
       super();
       this.weatherIcons = {
-        'clear-night': 'hass:weather-night',
-        'cloudy': 'hass:weather-cloudy',
-        'fog': 'hass:weather-fog',
-        'hail': 'hass:weather-hail',
-        'lightning': 'hass:weather-lightning',
-        'lightning-rainy': 'hass:weather-lightning-rainy',
-        'partlycloudy': 'hass:weather-partlycloudy',
-        'pouring': 'hass:weather-pouring',
-        'rainy': 'hass:weather-rainy',
-        'snowy': 'hass:weather-snowy',
-        'snowy-rainy': 'hass:weather-snowy-rainy',
-        'sunny': 'hass:weather-sunny',
-        'windy': 'hass:weather-windy',
-        'windy-variant': 'hass:weather-windy-variant'
+        "clear-night": "hass:weather-night",
+        cloudy: "hass:weather-cloudy",
+        exceptional: "hass:alert-circle-outline",
+        fog: "hass:weather-fog",
+        hail: "hass:weather-hail",
+        lightning: "hass:weather-lightning",
+        "lightning-rainy": "hass:weather-lightning-rainy",
+        partlycloudy: "hass:weather-partly-cloudy",
+        pouring: "hass:weather-pouring",
+        rainy: "hass:weather-rainy",
+        snowy: "hass:weather-snowy",
+        "snowy-rainy": "hass:weather-snowy-rainy",
+        sunny: "hass:weather-sunny",
+        windy: "hass:weather-windy",
+        "windy-variant": "hass:weather-windy-variant"
       };
       this.cardinalDirectionsIcon = [
         'mdi:arrow-down', 'mdi:arrow-bottom-left', 'mdi:arrow-left',
