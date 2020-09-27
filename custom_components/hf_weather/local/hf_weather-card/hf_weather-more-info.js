@@ -88,11 +88,16 @@ const locale = {
     ]
   }
 };
+
 // 延时加载，解决每次界面显示不了的问题
-setTimeout(function () {
-  class MoreInfoWeather extends Polymer.Element {
-    static get template() {
-      return Polymer.html`
+; (() => {
+  const timer = setInterval(() => {
+    if (Polymer.Element) {
+      clearInterval(timer);
+
+      class MoreInfoWeather extends Polymer.Element {
+        static get template() {
+          return Polymer.html`
       <style>
         ha-icon {
           color: var(--paper-item-icon-color);
@@ -234,120 +239,123 @@ setTimeout(function () {
         <div class="attribution">[[stateObj.attributes.attribution]]</div>
       </template>
     `;
-    }
+        }
 
-    static get properties() {
-      return {
-        hass: Object,
-        stateObj: Object,
-      };
-    }
+        static get properties() {
+          return {
+            hass: Object,
+            stateObj: Object,
+          };
+        }
 
-    constructor() {
-      super();
-      this.cardinalDirections = [
-        "N",
-        "NNE",
-        "NE",
-        "ENE",
-        "E",
-        "ESE",
-        "SE",
-        "SSE",
-        "S",
-        "SSW",
-        "SW",
-        "WSW",
-        "W",
-        "WNW",
-        "NW",
-        "NNW",
-        "N",
-      ];
-      this.weatherIcons = {
-        "clear-night": "hass:weather-night",
-        cloudy: "hass:weather-cloudy",
-        exceptional: "hass:alert-circle-outline",
-        fog: "hass:weather-fog",
-        hail: "hass:weather-hail",
-        lightning: "hass:weather-lightning",
-        "lightning-rainy": "hass:weather-lightning-rainy",
-        partlycloudy: "hass:weather-partly-cloudy",
-        pouring: "hass:weather-pouring",
-        rainy: "hass:weather-rainy",
-        snowy: "hass:weather-snowy",
-        "snowy-rainy": "hass:weather-snowy-rainy",
-        sunny: "hass:weather-sunny",
-        windy: "hass:weather-windy",
-        "windy-variant": "hass:weather-windy-variant"
-      };
-    }
-    ll(str) {
-      if (locale[this.lang] === undefined)
-        return locale.en[str];
-      return locale[this.lang][str];
-    }
-    computeDate(data) {
-      const date = new Date(data);
-      return date.toLocaleDateString(this.hass.language, {
-        weekday: "long",
-        month: "short",
-        day: "numeric",
-      });
-    }
+        constructor() {
+          super();
+          this.cardinalDirections = [
+            "N",
+            "NNE",
+            "NE",
+            "ENE",
+            "E",
+            "ESE",
+            "SE",
+            "SSE",
+            "S",
+            "SSW",
+            "SW",
+            "WSW",
+            "W",
+            "WNW",
+            "NW",
+            "NNW",
+            "N",
+          ];
+          this.weatherIcons = {
+            "clear-night": "hass:weather-night",
+            cloudy: "hass:weather-cloudy",
+            exceptional: "hass:alert-circle-outline",
+            fog: "hass:weather-fog",
+            hail: "hass:weather-hail",
+            lightning: "hass:weather-lightning",
+            "lightning-rainy": "hass:weather-lightning-rainy",
+            partlycloudy: "hass:weather-partly-cloudy",
+            pouring: "hass:weather-pouring",
+            rainy: "hass:weather-rainy",
+            snowy: "hass:weather-snowy",
+            "snowy-rainy": "hass:weather-snowy-rainy",
+            sunny: "hass:weather-sunny",
+            windy: "hass:weather-windy",
+            "windy-variant": "hass:weather-windy-variant"
+          };
+        }
+        ll(str) {
+          if (locale[this.lang] === undefined)
+            return locale.en[str];
+          return locale[this.lang][str];
+        }
+        computeDate(data) {
+          const date = new Date(data);
+          return date.toLocaleDateString(this.hass.language, {
+            weekday: "long",
+            month: "short",
+            day: "numeric",
+          });
+        }
 
-    computeDateTime(data) {
-      const date = new Date(data);
-      return date.toLocaleDateString(this.hass.language, {
-        weekday: "long",
-        hour: "numeric",
-      });
-    }
-    computeWind(speed) {
-      var calcSpeed = Math.round(speed * 1000 / 3600);
-      return calcSpeed;
-    }
-    getUnit(measure) {
-      const lengthUnit = this.hass.config.unit_system.length || "";
-      switch (measure) {
-        case "air_pressure":
-          return lengthUnit === "km" ? "hPa" : "inHg";
-        case "length":
-          return lengthUnit;
-        case "precipitation":
-          return lengthUnit === "km" ? "mm" : "in";
-        default:
-          return this.hass.config.unit_system[measure] || "";
+        computeDateTime(data) {
+          const date = new Date(data);
+          return date.toLocaleDateString(this.hass.language, {
+            weekday: "long",
+            hour: "numeric",
+          });
+        }
+        computeWind(speed) {
+          var calcSpeed = Math.round(speed * 1000 / 3600);
+          return calcSpeed;
+        }
+        getUnit(measure) {
+          const lengthUnit = this.hass.config.unit_system.length || "";
+          switch (measure) {
+            case "air_pressure":
+              return lengthUnit === "km" ? "hPa" : "inHg";
+            case "length":
+              return lengthUnit;
+            case "precipitation":
+              return lengthUnit === "km" ? "mm" : "in";
+            default:
+              return this.hass.config.unit_system[measure] || "";
+          }
+        }
+
+        windBearingToText(degree) {
+          const degreenum = parseInt(degree);
+          if (isFinite(degreenum)) {
+            return this.cardinalDirections[(((degreenum + 11.25) / 22.5) | 0) % 16];
+          }
+          return degree;
+        }
+
+        getWind(speed, bearing, localize) {
+          if (bearing != null) {
+            const cardinalDirection = this.windBearingToText(bearing);
+            return `${speed} ${this.getUnit("length")}/h (${localize(
+              `ui.card.weather.cardinal_direction.${cardinalDirection.toLowerCase()}`
+            ) || cardinalDirection})`;
+          }
+          return `${speed} ${this.getUnit("length")}/h`;
+        }
+
+        getWeatherIcon(condition) {
+          return this.weatherIcons[condition];
+        }
+
+        _showValue(item) {
+          return typeof item !== "undefined" && item !== null;
+        }
       }
+
+      customElements.define("hf_weather-more-info", MoreInfoWeather);
+      
     }
+  }, 1000)
+})();
 
-    windBearingToText(degree) {
-      const degreenum = parseInt(degree);
-      if (isFinite(degreenum)) {
-        return this.cardinalDirections[(((degreenum + 11.25) / 22.5) | 0) % 16];
-      }
-      return degree;
-    }
-
-    getWind(speed, bearing, localize) {
-      if (bearing != null) {
-        const cardinalDirection = this.windBearingToText(bearing);
-        return `${speed} ${this.getUnit("length")}/h (${localize(
-          `ui.card.weather.cardinal_direction.${cardinalDirection.toLowerCase()}`
-        ) || cardinalDirection})`;
-      }
-      return `${speed} ${this.getUnit("length")}/h`;
-    }
-
-    getWeatherIcon(condition) {
-      return this.weatherIcons[condition];
-    }
-
-    _showValue(item) {
-      return typeof item !== "undefined" && item !== null;
-    }
-  }
-
-  customElements.define("hf_weather-more-info", MoreInfoWeather);
-
-}, 500)
