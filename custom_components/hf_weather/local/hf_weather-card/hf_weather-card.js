@@ -303,7 +303,7 @@ const locale = {
           </div>
           <template is="dom-if" if="[[hourlyForecast]]">
           <div class="chart-title">天气预报-小时</div>
-            <ha-chart-base data="[[HourlyForecastChartData]]"></ha-chart-base>
+            <ha-chart-base data="[[HourlyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
             <div class="conditions">
               <template is="dom-repeat" items="[[hourlyForecast]]">
                 <div>
@@ -316,7 +316,7 @@ const locale = {
           </template>
           <template is="dom-if" if="[[dailyForecast]]">
             <div class="chart-title">天气预报-天</div>
-            <ha-chart-base data="[[DailyForecastChartData]]"></ha-chart-base>
+            <ha-chart-base data="[[DailyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
             <div class="conditions">
               <template is="dom-repeat" items="[[dailyForecast]]">
                 <div>
@@ -717,4 +717,3 @@ const locale = {
     }
   }, 1000)
 })();
-
