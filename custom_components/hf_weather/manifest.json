@@ -1,6 +1,7 @@
 {
   "domain": "hf_weather",
   "name": "he feng weather",
+  "version": "1.0",
   "documentation": "https://github.com/shaonianzhentan/hf_weather",
   "requirements": [],
   "dependencies": [],
