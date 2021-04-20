@@ -711,8 +711,16 @@ const locale = {
         }
       }
 
-
       customElements.define('hf_weather-card', WeatherCardChart);
+
+      // 添加预览
+      window.customCards = window.customCards || [];
+      window.customCards.push({
+        type: "hf_weather-card",
+        name: "和风天气",
+        preview: true,
+        description: "和风天气卡片"
+      });
 
     }
   }, 1000)
