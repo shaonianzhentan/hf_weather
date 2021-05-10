@@ -97,6 +97,10 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-card.js?ver=' + VERSION)
     hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-more-info.js?ver=' + VERSION)
 
+# 集成安装
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    await async_setup_platform(hass, config_entry.data, async_add_entities)
+    return True
 
 class HeFengWeather(WeatherEntity):
     """Representation of a weather condition."""

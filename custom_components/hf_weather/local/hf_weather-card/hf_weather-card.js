@@ -396,6 +396,12 @@ const locale = {
           };
         }
 
+
+        // 自定义默认配置
+        static getStubConfig() {
+          return { entity: "weather.tian_qi" }
+        }
+
         setConfig(config) {
           if (!config.entity) {
             throw new Error('Please define "weather" entity in the card config');
