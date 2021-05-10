@@ -88,15 +88,6 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
 
     async_add_devices([HeFengWeather(data, name)], True)
 
-    # 注册静态目录
-    VERSION = '1.2'
-    ROOT_PATH = '/hf_weather-local'
-    local = hass.config.path('custom_components/hf_weather/local')
-    if os.path.isdir(local):
-        hass.http.register_static_path(ROOT_PATH, local, False)
-    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-card.js?ver=' + VERSION)
-    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-more-info.js?ver=' + VERSION)
-
 # 集成安装
 async def async_setup_entry(hass, config_entry, async_add_entities):
     await async_setup_platform(hass, config_entry.data, async_add_entities)
