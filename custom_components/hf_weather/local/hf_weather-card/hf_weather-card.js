@@ -243,7 +243,7 @@ const locale = {
           </div>
           <template is="dom-if" if="[[hourlyForecast]]">
           <div class="chart-title">天气预报-小时</div>
-            <ha-chart-base chart-type="line" data="[[HourlyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
+            <ha-chart-base chart-type="[[HourlyForecastChartData.type]]" data="[[HourlyForecastChartData.data]]" options="[[HourlyForecastChartData.options]]" hass="[[_hass]]"></ha-chart-base>
             <div class="conditions">
               <template is="dom-repeat" items="[[hourlyForecast]]">
                 <div>
@@ -256,7 +256,7 @@ const locale = {
           </template>
           <template is="dom-if" if="[[dailyForecast]]">
             <div class="chart-title">天气预报-天</div>
-            <ha-chart-base chart-type="line" data="[[DailyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
+            <ha-chart-base chart-type="[[DailyForecastChartData.type]]" data="[[DailyForecastChartData.data]]" options="[[DailyForecastChartData.options]]" hass="[[_hass]]"></ha-chart-base>
             <div class="conditions">
               <template is="dom-repeat" items="[[dailyForecast]]">
                 <div>
@@ -453,7 +453,8 @@ const locale = {
           var precip = [];
           for (i = 0; i < data.length; i++) {
             var d = data[i];
-            dateTime.push(new Date(Date.parse(d.datetime.replace(/-/g, '/'))));
+            const dateFomart = new Date(Date.parse(d.datetime.replace(/-/g, '/')))
+            dateTime.push(mode === 'daily' ? dateFomart.toLocaleDateString(locale, { weekday: 'short' }) : dateFomart.toLocaleTimeString(locale, { hour: 'numeric' }));
             tempHigh.push(d.temperature);
             tempLow.push(d.templow);
             precip.push(d.precipitation);
@@ -461,167 +462,81 @@ const locale = {
           var style = getComputedStyle(document.body);
           var textColor = style.getPropertyValue('--primary-text-color');
           var dividerColor = style.getPropertyValue('--divider-color');
+          let datasets = []
+          if (mode === 'daily') {
+            datasets = [
+              {
+                label: this.ll('tempHi'),
+                type: 'line',
+                data: tempHigh,
+                yAxisID: 'TempAxis',
+                borderWidth: 2.0,
+                lineTension: 0.4,
+                pointRadius: 0.0,
+                pointHitRadius: 5.0,
+                fill: false,
+              },
+              {
+                label: this.ll('tempLo'),
+                type: 'line',
+                data: tempLow,
+                yAxisID: 'TempAxis',
+                borderWidth: 2.0,
+                lineTension: 0.4,
+                pointRadius: 0.0,
+                pointHitRadius: 5.0,
+                fill: false,
+              },
+              {
+                label: this.ll('precip'),
+                type: 'bar',
+                data: precip,
+                yAxisID: 'PrecipAxis',
+              },
+            ]
+          } else {
+            datasets = [
+              {
+                label: this.ll('tempHi'),
+                type: 'line',
+                data: tempHigh,
+                yAxisID: 'TempAxis',
+                borderWidth: 2.0,
+                lineTension: 0.4,
+                pointRadius: 0.0,
+                pointHitRadius: 5.0,
+                fill: false,
+              },
+            ]
+          }
           const chartOptions = {
             type: 'bar',
             data: {
               labels: dateTime,
-              datasets: [
-                {
-                  label: this.ll('tempHi'),
-                  type: 'line',
-                  data: tempHigh,
-                  yAxisID: 'TempAxis',
-                  borderWidth: 2.0,
-                  lineTension: 0.4,
-                  pointRadius: 0.0,
-                  pointHitRadius: 5.0,
-                  fill: false,
-                },
-                {
-                  label: this.ll('tempLo'),
-                  type: 'line',
-                  data: tempLow,
-                  yAxisID: 'TempAxis',
-                  borderWidth: 2.0,
-                  lineTension: 0.4,
-                  pointRadius: 0.0,
-                  pointHitRadius: 5.0,
-                  fill: false,
-                },
-                {
-                  label: this.ll('precip'),
-                  type: 'bar',
-                  data: precip,
-                  yAxisID: 'PrecipAxis',
-                },
-
-              ]
+              datasets
             },
             options: {
-              animation: {
-                duration: 300,
-                easing: 'linear',
-                onComplete: function () {
-                  var chartInstance = this.chart,
-                    ctx = chartInstance.ctx;
-                  ctx.fillStyle = textColor;
-                  var fontSize = 10;
-                  var fontStyle = 'normal';
-                  var fontFamily = 'Roboto';
-                  ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
-                  ctx.textAlign = 'center';
-                  ctx.textBaseline = 'bottom';
-                  var meta = chartInstance.controller.getDatasetMeta(2);
-                  meta.data.forEach(function (bar, index) {
-                    var data = (Math.round((chartInstance.data.datasets[2].data[index]) * 10) / 10).toFixed(1);
-                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
-                  });
-                },
-              },
-              legend: {
-                display: false,
-              },
-              scales: {
-                xAxes: [{
-                  type: 'time',
-                  maxBarThickness: 15,
-                  display: false,
-                  ticks: {
-                    display: false,
-                  },
-                  gridLines: {
-                    display: false,
-                  },
-                },
-                {
-                  id: 'DateAxis',
-                  position: 'top',
-                  gridLines: {
-                    display: true,
-                    drawBorder: false,
-                    color: dividerColor,
-                  },
-                  ticks: {
-                    display: true,
-                    source: 'labels',
-                    autoSkip: true,
-                    fontColor: textColor,
-                    maxRotation: 0,
-                    callback: function (value, index, values) {
-                      var data = value.toLocaleDateString(locale,
-                        { weekday: 'short' });
-                      var time = value.toLocaleTimeString(locale,
-                        { hour: 'numeric' });
-                      if (mode == 'hourly') {
-                        return time;
-                      }
-                      return data;
-                    },
-                  },
-                }],
-                yAxes: [{
-                  id: 'TempAxis',
-                  position: 'left',
-                  gridLines: {
-                    display: true,
-                    drawBorder: false,
-                    color: dividerColor,
-                    borderDash: [1, 3],
-                  },
-                  ticks: {
-                    maxTicksLimit: 8,
-                    stepSize: 1,
-                    display: true,
-                    fontColor: textColor,
-                  },
-                  afterFit: function (scaleInstance) {
-                    scaleInstance.width = 28;
-                  },
-                },
-                {
-                  id: 'PrecipAxis',
-                  position: 'right',
-                  gridLines: {
-                    display: false,
-                    drawBorder: false,
-                    color: dividerColor,
-                  },
-                  ticks: {
-                    display: false,
-                    min: 0,
-                    suggestedMax: 20,
-                    fontColor: textColor,
-                  },
-                  afterFit: function (scaleInstance) {
-                    scaleInstance.width = 15;
-                  },
-                }],
-              },
-              tooltips: {
-                mode: 'index',
-                callbacks: {
-                  title: function (items, data) {
-                    const item = items[0];
-                    const date = data.labels[item.index];
-                    return new Date(date).toLocaleDateString(locale, {
-                      month: 'long',
-                      day: 'numeric',
-                      weekday: 'long',
-                      hour: 'numeric',
-                      minute: 'numeric',
+              plugins: {
+                animation: {
+                  duration: 1000,
+                  easing: 'linear',
+                  onComplete: function () {
+                    var _this = this
+                    var ctx = this.ctx;
+                    ctx.fillStyle = textColor;
+                    ctx.font = "10px Roboto"
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    var metaIndex = mode === 'daily' ? 2 : 0
+                    var meta = this.getDatasetMeta(metaIndex);
+                    meta.data.forEach(function (bar, index) {
+                      var data = (Math.round((_this.data.datasets[metaIndex].data[index]) * 10) / 10).toFixed(1);
+                      ctx.fillText(data, bar.x, bar.y - 5);
                     });
                   },
-                  label: function (tooltipItems, data) {
-                    var label = data.datasets[tooltipItems.datasetIndex].label || '';
-                    if (data.datasets[2].label == label) {
-                      return label + ': ' + (tooltipItems.yLabel ?
-                        (tooltipItems.yLabel + ' ' + precipUnit) : ('0 ' + precipUnit));
-                    }
-                    return label + ': ' + tooltipItems.yLabel + ' ' + tempUnit;
-                  },
-                },
+                }
               },
-            },
+            }
           };
           return chartOptions;
         }
