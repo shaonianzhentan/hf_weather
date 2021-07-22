@@ -15,18 +15,6 @@ const locale = {
       '优', '良', '轻度污染', '中度污染', '重度污染', '严重污染'
     ]
   },
-  da: {
-    tempHi: "Temperatur",
-    tempLo: "Temperatur nat",
-    precip: "Nedbør",
-    uPress: "hPa",
-    uSpeed: "m/s",
-    uPrecip: "mm",
-    cardinalDirections: [
-      'N', 'N-NØ', 'NØ', 'Ø-NØ', 'Ø', 'Ø-SØ', 'SØ', 'S-SØ',
-      'S', 'S-SV', 'SV', 'V-SV', 'V', 'V-NV', 'NV', 'N-NV', 'N'
-    ]
-  },
   en: {
     tempHi: "Temperature",
     tempLo: "Temperature night",
@@ -37,54 +25,6 @@ const locale = {
     cardinalDirections: [
       'N', 'N-NE', 'NE', 'E-NE', 'E', 'E-SE', 'SE', 'S-SE',
       'S', 'S-SW', 'SW', 'W-SW', 'W', 'W-NW', 'NW', 'N-NW', 'N'
-    ]
-  },
-  fr: {
-    tempHi: "Température",
-    tempLo: "Température nuit",
-    precip: "Précipitations",
-    uPress: "hPa",
-    uSpeed: "m/s",
-    uPrecip: "mm",
-    cardinalDirections: [
-      'N', 'N-NE', 'NE', 'E-NE', 'E', 'E-SE', 'SE', 'S-SE',
-      'S', 'S-SO', 'SO', 'O-SO', 'O', 'O-NO', 'NO', 'N-NO', 'N'
-    ]
-  },
-  nl: {
-    tempHi: "Maximum temperatuur",
-    tempLo: "Minimum temperatuur",
-    precip: "Neerslag",
-    uPress: "hPa",
-    uSpeed: "m/s",
-    uPrecip: "mm",
-    cardinalDirections: [
-      'N', 'N-NO', 'NO', 'O-NO', 'O', 'O-ZO', 'ZO', 'Z-ZO',
-      'Z', 'Z-ZW', 'ZW', 'W-ZW', 'W', 'W-NW', 'NW', 'N-NW', 'N'
-    ]
-  },
-  ru: {
-    tempHi: "Температура",
-    tempLo: "Температура ночью",
-    precip: "Осадки",
-    uPress: "гПа",
-    uSpeed: "м/с",
-    uPrecip: "мм",
-    cardinalDirections: [
-      'С', 'С-СВ', 'СВ', 'В-СВ', 'В', 'В-ЮВ', 'ЮВ', 'Ю-ЮВ',
-      'Ю', 'Ю-ЮЗ', 'ЮЗ', 'З-ЮЗ', 'З', 'З-СЗ', 'СЗ', 'С-СЗ', 'С'
-    ]
-  },
-  sv: {
-    tempHi: "Temperatur",
-    tempLo: "Temperatur natt",
-    precip: "Nederbörd",
-    uPress: "hPa",
-    uSpeed: "m/s",
-    uPrecip: "mm",
-    cardinalDirections: [
-      'N', 'N-NO', 'NO', 'O-NO', 'O', 'O-SO', 'SO', 'S-SO',
-      'S', 'S-SV', 'SV', 'V-SV', 'V', 'V-NV', 'NV', 'N-NV', 'N'
     ]
   }
 };
@@ -303,7 +243,7 @@ const locale = {
           </div>
           <template is="dom-if" if="[[hourlyForecast]]">
           <div class="chart-title">天气预报-小时</div>
-            <ha-chart-base data="[[HourlyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
+            <ha-chart-base chart-type="line" data="[[HourlyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
             <div class="conditions">
               <template is="dom-repeat" items="[[hourlyForecast]]">
                 <div>
@@ -316,7 +256,7 @@ const locale = {
           </template>
           <template is="dom-if" if="[[dailyForecast]]">
             <div class="chart-title">天气预报-天</div>
-            <ha-chart-base data="[[DailyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
+            <ha-chart-base chart-type="line" data="[[DailyForecastChartData]]" hass="[[_hass]]"></ha-chart-base>
             <div class="conditions">
               <template is="dom-repeat" items="[[dailyForecast]]">
                 <div>
