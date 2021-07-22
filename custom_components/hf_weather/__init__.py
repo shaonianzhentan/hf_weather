@@ -4,7 +4,7 @@ from .weather import async_setup_platform
 
 def setup(hass, config):
     # 注册静态目录
-    VERSION = '1.2.1'
+    VERSION = '1.2.2'
     ROOT_PATH = '/hf_weather-local'
     hass.http.register_static_path(ROOT_PATH, hass.config.path('custom_components/hf_weather/local'), False)
     hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-card.js?ver=' + VERSION)
