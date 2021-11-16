@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "项目: https://github.com/shaonianzhentan/hf_weather",
+                "description": "注意：信息获取次数有限制，请自行申请appkey \n\n 项目: https://github.com/shaonianzhentan/hf_weather",
                 "data": {
                     "name": "天气",
                     "city": "城市拼音",

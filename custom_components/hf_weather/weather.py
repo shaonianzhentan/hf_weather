@@ -15,11 +15,13 @@ from homeassistant.helpers.event import async_track_time_interval
 
 from homeassistant.components.weather import (
     WeatherEntity, ATTR_FORECAST_CONDITION, ATTR_FORECAST_TEMP,  
-    ATTR_FORECAST_TEMP_LOW, ATTR_FORECAST_PRECIPITATION, ATTR_FORECAST_TIME, PLATFORM_SCHEMA)
+    ATTR_FORECAST_TEMP_LOW, ATTR_FORECAST_PRECIPITATION, ATTR_FORECAST_TIME)
 from homeassistant.const import (ATTR_ATTRIBUTION, TEMP_CELSIUS, CONF_NAME)
 from homeassistant.util import Throttle
 import homeassistant.helpers.config_validation as cv
 import homeassistant.util.dt as dt_util
+
+from .const import VERSION, ROOT_PATH
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -66,17 +68,14 @@ ATTRIBUTION = "来自和风天气的天气数据"
 
 ATTR_FORECAST_PROBABLE_PRECIPITATION = 'probable_precipitation'
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_NAME): cv.string,
-    vol.Required(CONF_CITY): cv.string,
-    vol.Required(CONF_APPKEY): cv.string,
-})
+# 集成安装
+async def async_setup_entry(hass, config_entry, async_add_entities):
+    hass.http.register_static_path(ROOT_PATH, hass.config.path('custom_components/hf_weather/local'), False)
+    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-card.js?ver=' + VERSION)
+    hass.components.frontend.add_extra_js_url(hass, ROOT_PATH + '/hf_weather-card/hf_weather-more-info.js?ver=' + VERSION)
 
-
-@asyncio.coroutine
-def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
-    """Set up the hefeng weather."""
     _LOGGER.info("setup platform weather.Heweather...")
+    config = config_entry.data
     name = config.get(CONF_NAME)
     city = config.get(CONF_CITY)
     appkey = config.get(CONF_APPKEY)
@@ -86,12 +85,7 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     yield from data.async_update(dt_util.now())
     async_track_time_interval(hass, data.async_update, TIME_BETWEEN_UPDATES)
 
-    async_add_devices([HeFengWeather(data, name)], True)
-
-# 集成安装
-async def async_setup_entry(hass, config_entry, async_add_entities):
-    await async_setup_platform(hass, config_entry.data, async_add_entities)
-    return True
+    async_add_entities([HeFengWeather(data, name)], True)
 
 class HeFengWeather(WeatherEntity):
     """Representation of a weather condition."""
