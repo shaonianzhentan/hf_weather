@@ -82,7 +82,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     data = WeatherData(hass, city, appkey)
 
-    yield from data.async_update(dt_util.now())
+    await data.async_update(dt_util.now())
     async_track_time_interval(hass, data.async_update, TIME_BETWEEN_UPDATES)
 
     async_add_entities([HeFengWeather(data, name)], True)
