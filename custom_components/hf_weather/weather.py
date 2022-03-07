@@ -169,10 +169,11 @@ class HeFengWeather(WeatherEntity):
         return 'Powered by Home Assistant'
 
     @property
-    def device_state_attributes(self):
+    def state_attributes(self):
+        attributes = super().state_attributes
         """设置其它一些属性值."""
         if self._condition is not None:
-            return {
+            attributes.update({
                 "city": self._name,
                 ATTR_ATTRIBUTION: ATTRIBUTION,
                 ATTR_UPDATE_TIME: self._updatetime,
@@ -181,7 +182,8 @@ class HeFengWeather(WeatherEntity):
                 ATTR_HOURLY_FORECAST: self.hourly_forecast,
                 ATTR_SUGGESTION: self._suggestion,
                 ATTR_CUSTOM_UI_MORE_INFO: "hf_weather-more-info"
-            }
+            })
+        return attributes
 
     @property
     def forecast(self):
@@ -357,7 +359,7 @@ class WeatherData(object):
         # 此处使用了基于aiohttp库的async_get_clientsession
         try:
             session = async_get_clientsession(self._hass)
-            with async_timeout.timeout(15, loop=self._hass.loop):
+            with async_timeout.timeout(15):
                 response = yield from session.post(
                     self._url, data=self._params)
 
