@@ -12,7 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 DATA_SCHEMA = vol.Schema({
     vol.Required("name", default = "天气"): str,
     vol.Required("city", default = "shanghai"): str,
-    vol.Required("appkey", default = "06642046425c68a351817b5b020b591f"): str
+    vol.Required("appkey", default = ""): str
 })
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
