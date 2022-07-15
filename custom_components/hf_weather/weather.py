@@ -95,8 +95,6 @@ class HeFengWeather(WeatherEntity):
         self._name = None
         self._object_id = object_id
         self._condition = None
-        self._temperature = None
-        self._temperature_unit = None
         self._humidity = None
         self._pressure = None
         self._wind_speed = None
@@ -121,16 +119,6 @@ class HeFengWeather(WeatherEntity):
     def should_poll(self):
         """attention No polling needed for a demo weather condition."""
         return True
-
-    @property
-    def temperature(self):
-        """Return the temperature."""
-        return self._temperature
-
-    @property
-    def temperature_unit(self):
-        """Return the unit of measurement."""
-        return self._temperature_unit
 
     @property
     def humidity(self):
@@ -234,8 +222,8 @@ class HeFengWeather(WeatherEntity):
         self._updatetime = self._data.updatetime
         self._name = self._data.name
         self._condition = self._data.condition
-        self._temperature = self._data.temperature
-        self._temperature_unit = self._data.temperature_unit
+        self._attr_temperature = self._data.temperature
+        self._attr_temperature_unit = self._data.temperature_unit
         self._humidity = self._data.humidity
         self._pressure = self._data.pressure
         self._wind_speed = self._data.wind_speed
