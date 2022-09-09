@@ -45,7 +45,7 @@ CONDITION_CLASSES = {
     'windy': ["有风", "微风", "和风", "清风"],
     'windy-variant': ["强风", "疾风", "大风", "烈风"],
     'hurricane': ["飓风", "龙卷风", "热带风暴", "狂暴风", "风暴"],
-    'rainy': ["雨", "毛毛雨", "小雨", "中雨", "大雨", "阵雨", "极端降雨"],
+    'rainy': ["雨", "毛毛雨", "小雨", "小到中雨", "中雨", "大雨", "阵雨", "极端降雨"],
     'pouring': ["暴雨", "大暴雨", "特大暴雨", "强阵雨"],
     'lightning-rainy': ["雷阵雨", "强雷阵雨"],
     'fog': ["雾", "薄雾"],
@@ -243,8 +243,7 @@ class WeatherData(object):
         self._hass = hass
 
         self._url = "https://way.jd.com/he/freeweather"
-        self._params = {"city": city,
-                        "appkey": appkey}
+        self._params = { "city": city, "appkey": appkey }
 
         self._name = None
         self._condition = None
@@ -330,18 +329,6 @@ class WeatherData(object):
     def async_update(self, now):
         """从远程更新信息."""
         _LOGGER.info("Update from JingdongWangxiang's OpenAPI...")
-
-        """
-        # 异步模式的测试代码
-        import time
-        _LOGGER.info("before time.sleep")
-        time.sleep(40)
-        _LOGGER.info("after time.sleep and before asyncio.sleep")
-        asyncio.sleep(40)
-        _LOGGER.info("after asyncio.sleep and before yield from asyncio.sleep")
-        yield from asyncio.sleep(40)
-        _LOGGER.info("after yield from asyncio.sleep")
-        """
 
         # 通过HTTP访问，获取需要的信息
         # 此处使用了基于aiohttp库的async_get_clientsession
