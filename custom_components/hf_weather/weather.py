@@ -94,6 +94,7 @@ class HeFengWeather(WeatherEntity):
         """Initialize the  weather."""
         self._name = None
         self._object_id = object_id
+        self._attr_unique_id = object_id
         self._condition = None
         self._humidity = None
         self._pressure = None
